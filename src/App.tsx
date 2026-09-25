@@ -21,7 +21,7 @@ import Kiosco from './components/Kiosco';
 import { BureauLogo } from './components/BureauLogo';
 
 // Types
-type TicketStatus = 'pending' | 'in_progress' | 'resolved';
+type TicketStatus = 'pending' | 'in_progress' | 'resolved' | 'open';
 type Priority = 'baja' | 'media' | 'alta';
 
 interface Ticket {

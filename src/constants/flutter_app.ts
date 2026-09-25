@@ -456,5 +456,5 @@ class PantallaListaTickets extends StatelessWidget {
     );
   }
 }
-\`;
+`;
 
