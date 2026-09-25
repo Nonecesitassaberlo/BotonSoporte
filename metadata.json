@@ -1,0 +1,5 @@
+{
+  "name": "Support Button - Sala de Juntas",
+  "description": "Kiosk app for requesting technical support from meeting rooms with Firebase integration and spam prevention.",
+  "requestFramePermissions": []
+}

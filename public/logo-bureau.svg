@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 200" fill="none">
+  <!-- Symbol / Icon -->
+  <g fill="#003865" transform="translate(10, 5)">
+    <!-- Top Head -->
+    <circle cx="100" cy="40" r="13" />
+    <!-- Left Head -->
+    <circle cx="40" cy="100" r="13" />
+    <!-- Bottom Head -->
+    <circle cx="100" cy="160" r="13" />
+    <!-- Right Head -->
+    <circle cx="160" cy="100" r="13" />
+
+    <!-- 4 Swooshing Arms forming the pinwheel swirl -->
+    <!-- Top arm swooshing to center-left -->
+    <path d="M 100 58 C 88 58 76 68 74 82 C 72 96 82 108 92 110 C 97 111 102 108 103 103 C 104 94 96 86 92 78 C 90 73 94 66 100 66 C 104 66 106 63 106 60 C 106 58 103 58 100 58 Z" />
+    
+    <!-- Left arm swooshing to center-bottom -->
+    <path d="M 58 100 C 58 112 68 124 82 126 C 96 128 108 118 110 108 C 111 103 108 98 103 97 C 94 96 86 104 78 108 C 73 110 66 106 66 100 C 66 96 63 94 60 94 C 58 94 58 97 58 100 Z" />
+
+    <!-- Bottom arm swooshing to center-right -->
+    <path d="M 100 142 C 112 142 124 132 126 118 C 128 104 118 92 108 90 C 103 89 98 92 97 97 C 96 106 104 114 108 122 C 110 127 106 134 100 134 C 96 134 94 137 94 140 C 94 142 97 142 100 142 Z" />
+
+    <!-- Right arm swooshing to center-top -->
+    <path d="M 142 100 C 142 88 132 76 118 74 C 104 72 92 82 90 92 C 89 97 92 102 97 103 C 106 104 114 96 122 92 C 127 90 134 94 134 100 C 134 104 137 106 140 106 C 142 106 142 103 142 100 Z" />
+
+    <!-- Central Vortex Curves -->
+    <path d="M 98 72 C 86 80 84 94 88 106 C 90 112 96 116 102 116 C 108 116 112 112 112 106 C 112 98 108 90 104 84 C 101 78 98 72 98 72 Z" opacity="0.95" />
+    <path d="M 128 98 C 120 86 106 84 94 88 C 88 90 84 96 84 102 C 84 108 88 112 94 112 C 102 112 110 108 116 104 C 122 101 128 98 128 98 Z" opacity="0.95" />
+    <path d="M 102 128 C 114 120 116 106 112 94 C 110 88 104 84 98 84 C 92 84 88 88 88 94 C 88 102 92 110 96 116 C 99 122 102 128 102 128 Z" opacity="0.95" />
+    <path d="M 72 102 C 80 114 94 116 106 112 C 112 110 116 104 116 98 C 116 92 112 88 106 88 C 98 88 90 92 84 96 C 78 99 72 102 72 102 Z" opacity="0.95" />
+  </g>
+
+  <!-- Typography -->
+  <g fill="#003865" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif">
+    <!-- G R E A T E R -->
+    <text x="210" y="58" font-size="16" font-weight="700" letter-spacing="0.45em">GREATER</text>
+
+    <!-- MEDELLIN -->
+    <text x="210" y="98" font-size="38" font-weight="900" letter-spacing="0.02em">MEDELLIN</text>
+
+    <!-- CONVENTION & VISITORS -->
+    <text x="210" y="117" font-size="12.5" font-weight="700" letter-spacing="0.1em">CONVENTION &amp; VISITORS</text>
+
+    <!-- BUREAU -->
+    <text x="210" y="162" font-size="44" font-weight="900" letter-spacing="0.02em">BUREAU</text>
+  </g>
+</svg>
