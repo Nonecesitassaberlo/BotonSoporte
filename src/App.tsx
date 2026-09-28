@@ -25,7 +25,7 @@ import { collection, query, orderBy, onSnapshot, doc, updateDoc, deleteDoc } fro
 import { db } from './lib/firebase';
 import Kiosco from './components/Kiosco';
 import { BureauLogo } from './components/BureauLogo';
-import { playAlertSound, saveCustomAlertAudio, removeCustomAlertAudio } from './lib/sound';
+import { playAlertSound, saveCustomAlertAudio, removeCustomAlertAudio, unlockAudio } from './lib/sound';
 
 // Types
 type TicketStatus = 'pending' | 'in_progress' | 'resolved' | 'open';
@@ -85,6 +85,56 @@ function PanelAdmin() {
     setTimeout(() => playAlertSound(), 100);
   };
 
+  const titleBlinkIntervalRef = useRef<any>(null);
+
+  const startTitleBlink = (areaOrCategory: string) => {
+    if (titleBlinkIntervalRef.current) clearInterval(titleBlinkIntervalRef.current);
+    let toggle = false;
+    titleBlinkIntervalRef.current = setInterval(() => {
+      document.title = toggle 
+        ? `🚨 ¡NUEVO TICKET! (${areaOrCategory})` 
+        : `🔔 REVISAR MESA DE AYUDA TI`;
+      toggle = !toggle;
+    }, 1000);
+  };
+
+  const stopTitleBlink = () => {
+    if (titleBlinkIntervalRef.current) {
+      clearInterval(titleBlinkIntervalRef.current);
+      titleBlinkIntervalRef.current = null;
+    }
+    document.title = 'Panel TI • Bureau Medellín';
+  };
+
+  // Unlock audio on any click/touch/interaction anywhere on the panel
+  useEffect(() => {
+    const handleUserInteraction = () => {
+      unlockAudio();
+    };
+    window.addEventListener('click', handleUserInteraction);
+    window.addEventListener('keydown', handleUserInteraction);
+    window.addEventListener('touchstart', handleUserInteraction);
+
+    // Stop blinking when user switches back to this tab
+    const handleVisibility = () => {
+      if (!document.hidden) {
+        stopTitleBlink();
+        unlockAudio();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    window.addEventListener('focus', handleVisibility);
+
+    return () => {
+      window.removeEventListener('click', handleUserInteraction);
+      window.removeEventListener('keydown', handleUserInteraction);
+      window.removeEventListener('touchstart', handleUserInteraction);
+      document.removeEventListener('visibilitychange', handleVisibility);
+      window.removeEventListener('focus', handleVisibility);
+      stopTitleBlink();
+    };
+  }, []);
+
   useEffect(() => {
     soundEnabledRef.current = soundEnabled;
     localStorage.setItem('ti_alert_sound', String(soundEnabled));
@@ -128,13 +178,18 @@ function PanelAdmin() {
               playAlertSound();
             }
 
-            // 2. Visual popup notification
+            // 2. Flash page title in browser tab if in background
+            if (document.hidden) {
+              startTitleBlink(newDoc.room || newDoc.category || 'TI');
+            }
+
+            // 3. Visual popup notification
             setNewTicketNotification(newDoc);
             setTimeout(() => {
               setNewTicketNotification((curr) => curr?.id === newDoc.id ? null : curr);
             }, 8000);
 
-            // 3. Native desktop notification
+            // 4. Native desktop notification
             if ('Notification' in window && Notification.permission === 'granted') {
               try {
                 new Notification('🔔 ¡Nuevo Ticket en Bureau Soporte!', {
