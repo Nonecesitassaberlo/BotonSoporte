@@ -17,13 +17,15 @@ import {
   Database,
   Volume2,
   VolumeX,
-  X
+  X,
+  Music,
+  RotateCcw
 } from 'lucide-react';
 import { collection, query, orderBy, onSnapshot, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from './lib/firebase';
 import Kiosco from './components/Kiosco';
 import { BureauLogo } from './components/BureauLogo';
-import { playAlertSound } from './lib/sound';
+import { playAlertSound, saveCustomAlertAudio, removeCustomAlertAudio } from './lib/sound';
 
 // Types
 type TicketStatus = 'pending' | 'in_progress' | 'resolved' | 'open';
@@ -56,6 +58,32 @@ function PanelAdmin() {
   });
   const soundEnabledRef = useRef(soundEnabled);
   const [newTicketNotification, setNewTicketNotification] = useState<Ticket | null>(null);
+
+  // Custom audio file upload state
+  const audioInputRef = useRef<HTMLInputElement>(null);
+  const [customAudioName, setCustomAudioName] = useState<string | null>(() => {
+    return localStorage.getItem('ti_custom_alert_name') || (localStorage.getItem('ti_custom_alert_audio') ? 'Audio personalizado' : null);
+  });
+
+  const handleAudioUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      await saveCustomAlertAudio(file);
+      setCustomAudioName(file.name);
+      setSoundEnabled(true);
+      // Play immediately as preview
+      setTimeout(() => playAlertSound(), 100);
+    } catch (err: any) {
+      alert(err.message || 'Error al procesar el archivo de audio');
+    }
+  };
+
+  const handleResetAudio = () => {
+    removeCustomAlertAudio();
+    setCustomAudioName(null);
+    setTimeout(() => playAlertSound(), 100);
+  };
 
   useEffect(() => {
     soundEnabledRef.current = soundEnabled;
@@ -383,6 +411,15 @@ function PanelAdmin() {
 
             {/* Controles de Alerta Sonora */}
             <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 p-1 rounded-xl">
+              {/* Input oculto para subir archivo de audio */}
+              <input 
+                type="file" 
+                ref={audioInputRef} 
+                accept="audio/*" 
+                onChange={handleAudioUpload} 
+                className="hidden" 
+              />
+
               <button
                 onClick={() => {
                   const nextState = !soundEnabled;
@@ -402,11 +439,38 @@ function PanelAdmin() {
 
               <button
                 onClick={() => playAlertSound()}
-                className="px-2 py-1.5 text-[11px] font-bold text-[#003865] hover:bg-white rounded-lg transition-colors cursor-pointer"
+                className="px-2.5 py-1.5 text-[11px] font-bold text-[#003865] hover:bg-white rounded-lg transition-colors cursor-pointer"
                 title="Probar cómo suena la alerta de nuevo ticket"
               >
                 Probar
               </button>
+
+              {/* Botón para cambiar / subir archivo de audio */}
+              <button
+                onClick={() => audioInputRef.current?.click()}
+                className={`flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-bold rounded-lg transition-colors cursor-pointer ${
+                  customAudioName 
+                    ? 'bg-sky-100 text-[#003865] border border-sky-200' 
+                    : 'text-slate-600 hover:bg-white'
+                }`}
+                title={customAudioName ? `Audio cargado: ${customAudioName}. Clic para cambiar` : 'Subir tu propio archivo de audio (MP3, WAV, etc.)'}
+              >
+                <Music size={13} />
+                <span className="hidden md:inline max-w-[85px] truncate">
+                  {customAudioName ? 'Audio Propio' : 'Subir Audio'}
+                </span>
+              </button>
+
+              {/* Botón para restablecer si tiene audio personalizado */}
+              {customAudioName && (
+                <button
+                  onClick={handleResetAudio}
+                  className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-white rounded-lg transition-colors cursor-pointer"
+                  title="Restablecer sonido por defecto"
+                >
+                  <RotateCcw size={13} />
+                </button>
+              )}
             </div>
 
             {/* Campana Indicadora */}
